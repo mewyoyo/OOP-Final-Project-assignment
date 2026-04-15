@@ -2,17 +2,48 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+
+    private static String currentRole = "User"; // Переменная для хранения текущей роли
+
+    private static boolean login() {
+        System.out.println("--- Welcome to Pet Adoption System ---");
+        System.out.println("1. Login as Admin (Full Access)");
+        System.out.println("2. Login as Guest (View Only)");
+        System.out.print("Select your role: ");
+
+        int choice = getValidInt();
+
+        if (choice == 1) {
+            // Пароль запрашивается ТОЛЬКО если выбрана роль админа
+            System.out.print("Enter Admin Password: ");
+            String pass = scanner.nextLine();
+
+            if (pass.equals("123")) {
+                currentRole = "Admin";
+                System.out.println("Access Granted! Welcome, Admin.");
+                return true;
+            } else {
+                System.out.println("Incorrect password. Access Denied.");
+                return false;
+            }
+        } else {
+            currentRole = "User";
+            System.out.println("Logged in as Guest. Some features are restricted.");
+            return true;
+        }
+    }
+
     private static ArrayList<Pet> petDatabase = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        loadFromFile();
+        if (!login()) return; // Останавливаем программу, если админ не ввел пароль
 
+        loadFromFile();
         boolean running = true;
-        System.out.println("--- Welcome to Pet Adoption System ---");
 
         while (running) {
-            System.out.println("\nSelect an option:");
+            System.out.println("\n--- Main Menu (Role: " + currentRole + ") ---");
             System.out.println("1. Add a Dog");
             System.out.println("2. Add a Cat");
             System.out.println("3. View all pets");
@@ -23,22 +54,37 @@ public class Main {
             System.out.print("Your choice: ");
 
             int choice = getValidInt();
-            scanner.nextLine();
 
             switch (choice) {
-                case 1: addDog(); break;
-                case 2: addCat(); break;
-                case 3: viewPets(); break;
-                case 4: updatePet(); break;
-                case 5: deletePet(); break;
-                case 6: exportToCSV(); break;
+                case 1:
+                case 2:
+                    if (currentRole.equals("Admin")) {
+                        if (choice == 1) addDog(); else addCat();
+                    } else {
+                        System.out.println("Access Denied! Guests cannot add pets.");
+                    }
+                    break;
+                case 3:
+                    viewPets();
+                    break;
+                case 4:
+                    if (currentRole.equals("Admin")) updatePet();
+                    else System.out.println("Access Denied! Guests cannot update records.");
+                    break;
+                case 5:
+                    if (currentRole.equals("Admin")) deletePet();
+                    else System.out.println("Access Denied! Guests cannot remove pets.");
+                    break;
+                case 6:
+                    exportToCSV();
+                    break;
                 case 0:
                     saveToFile();
                     running = false;
                     System.out.println("Exiting... Goodbye!");
                     break;
                 default:
-                    System.out.println("Invalid choice. Try again.");
+                    System.out.println("Invalid choice.");
             }
         }
     }
@@ -66,7 +112,7 @@ public class Main {
         System.out.print("Enter Age: ");
         int age = getValidInt();
         System.out.print("Is it an indoor cat? (true/false): ");
-        boolean isIndoor = scanner.nextBoolean();
+        boolean isIndoor = getValidBoolean();
 
         petDatabase.add(new Cat(id, name, age, isIndoor));
         System.out.println("Cat added successfully!");
@@ -175,6 +221,14 @@ public class Main {
             } catch (NumberFormatException e) {
                 System.out.print("Invalid input! Please enter a number: ");
             }
+        }
+    }
+    private static boolean getValidBoolean() {
+        while (true) {
+            String input = scanner.nextLine().toLowerCase();
+            if (input.equals("true")) return true;
+            if (input.equals("false")) return false;
+            System.out.print("Invalid input! Please enter 'true' or 'false': ");
         }
     }
 }

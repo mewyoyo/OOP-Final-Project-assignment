@@ -1,4 +1,4 @@
-# Pet Adoption Database System
+# Pet Adoption Database System (v2.0 - GUI Enhanced)
 
 ### Student Information
 * **Name:** Fanisova Raniia
@@ -8,37 +8,34 @@
 ---
 
 ## 1. Project Description
-This is a console-based Java application designed to manage records of pets available for adoption. The system acts as a centralized database for shelter administrators to track different types of animals, manage their detailed profiles, and handle the adoption lifecycle through a structured Command Line Interface (CLI).
+This is a high-level Java application designed for animal shelters. It features a dual-interface system: a robust **Command Line Interface (CLI)** for backend management and a **Graphical User Interface (GUI)** for visual data interaction. The system includes advanced security with user roles and persistent storage.
 
 ## 2. Project Objectives
-* **Functional CRUD Implementation:** Create a reliable system to add, view, update, and remove pet records.
-* **OOP Mastery:** Demonstrate professional use of Encapsulation, Inheritance, and Polymorphism.
-* **Data Integrity:** Ensure that information is never lost by using file-based persistent storage.
-* **Software Stability:** Implement robust input validation to prevent runtime crashes.
+* **User Experience:** Provide both console and window-based interaction.
+* **Security:** Implement role-based access control (Admin/Guest).
+* **Data Reliability:** Ensure zero data loss using automated file synchronization.
+* **Code Quality:** Demonstrate advanced OOP concepts (Polymorphism, Inheritance, Encapsulation).
 
 ## 3. Key Requirements Implemented (Project Requirement List)
-To achieve the project goals, the following 10+ requirements were successfully integrated:
-1.  **Create:** Add new Dog or Cat profiles with unique attributes.
-2.  **Read:** Display a formatted list of all pets currently in the system.
-3.  **Update:** Modify existing records (name, age) based on a specific ID.
-4.  **Delete:** Remove records once a pet is adopted or transferred.
-5.  **Data Persistence:** Automatic saving to `pets.txt` upon program termination.
-6.  **Data Import:** Automatic loading of existing records when the app starts.
-7.  **Export Capability:** Exporting database records to a standard `.csv` format.
-8.  **Input Validation:** Using a validation engine to filter out non-numeric inputs for IDs and ages.
-9.  **Encapsulation:** All class fields are `private` with access controlled via `getters` and `setters`.
-10. **Inheritance:** A hierarchical structure with a `Pet` parent class and specialized `Dog`/`Cat` children.
-11. **Polymorphism:** Method overriding for the `makeSound()` function to trigger breed-specific sounds.
+1.  **Dual Interface:** Both CLI and GUI versions functional.
+2.  **Authentication:** Secure login system with password protection.
+3.  **Role-Based Access:** Admin (Full control) vs Guest (View-only) permissions.
+4.  **Full CRUD:** Create, Read, Update, and Delete pets via console or window.
+5.  **Advanced Validation:** Custom methods to prevent crashes from invalid data types.
+6.  **Persistence:** Auto-save/load functionality via `pets.txt`.
+7.  **Data Export:** One-click CSV export for external reporting.
+8.  **Inheritance:** Hierarchical structure (`Pet` -> `Dog`/`Cat`).
+9.  **Polymorphism:** Overridden methods for specific pet sounds and file formatting.
+10. **Error Handling:** Robust `try-catch` blocks throughout the application logic.
 
-## 4. Documentation of Algorithms & Functions
+## 4. Documentation of Algorithms & Data Structures
 ### Data Structures
-The core of the system is an `ArrayList<Pet>`. This dynamic array was chosen because it allows for efficient sequential access and flexible resizing as the shelter grows.
+The core engine uses an `ArrayList<Pet>`. In the GUI, this is synchronized with a `DefaultTableModel`. This "Model-View" approach ensures that adding a pet to the backend immediately updates the `JTable` visual display.
 
-### Key Algorithms & Logic
-* **Validation Algorithm:** The `getValidInt()` function uses an infinite `while` loop combined with a `try-catch` block. It attempts to parse a string into an integer; if a `NumberFormatException` occurs, it catches the error and prompts the user again instead of crashing.
-* **File I/O Logic:**
-    * **Saving:** The system iterates through the `ArrayList` and converts each object into a comma-separated string using a custom `toFileString()` method.
-    * **Loading:** Upon startup, the `Scanner` reads the file line-by-line, splits the string into parts, and uses conditional logic to reconstruct the correct object type (Dog or Cat).
+### Key Algorithms
+* **Role Logic:** When a user logs in, a `currentRole` string is set. The `switch-case` menu in the CLI and the buttons in the GUI check this string before executing "Add" or "Delete" commands.
+* **Event Handling (GUI):** We use **ActionListeners** with Lambda expressions to capture button clicks. When "Add Dog" is clicked, a `JOptionPane` sequence gathers data, validates it, and pushes it to the table.
+* **Input Sanitization:** The `getValidBoolean()` and `getValidInt()` algorithms use recursive loops to ensure the program never crashes from an `InputMismatchException`.
 
 ### Challenges Faced
 

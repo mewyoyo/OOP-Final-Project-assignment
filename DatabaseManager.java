@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:pets.db";
 
-    // Инициализация: создаем файл базы и таблицу, если их нет
+
     public static void initialize() {
         try (Connection conn = DriverManager.getConnection(URL)) {
             String sql = "CREATE TABLE IF NOT EXISTS pets (" +
@@ -19,7 +19,7 @@ public class DatabaseManager {
         }
     }
 
-    // Сохранение нового питомца
+
     public static void savePet(String type, String name, String age, String info) {
         String sql = "INSERT INTO pets(type, name, age, info) VALUES(?,?,?,?)";
         try (Connection conn = DriverManager.getConnection(URL);
@@ -34,7 +34,7 @@ public class DatabaseManager {
         }
     }
 
-    // Загрузка всех данных для таблицы GUI
+
     public static ArrayList<Object[]> loadAllPets() {
         ArrayList<Object[]> data = new ArrayList<>();
         String sql = "SELECT * FROM pets";

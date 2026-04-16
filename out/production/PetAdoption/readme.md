@@ -40,19 +40,39 @@ The core engine uses an `ArrayList<Pet>`. In the GUI, this is synchronized with 
 ### Challenges Faced
 
 During the development of the Pet Adoption Database System, several technical challenges were encountered and successfully resolved:
+### Phase 1: CLI Development & Core Logic
 
 * **Polymorphic Object Reconstruction from Files:**
     * **Problem:** When loading data from `pets.txt`, the application receives raw strings. The challenge was to correctly reconstruct the specific subclass (`Dog` or `Cat`) from a generic text line while preserving unique attributes like "breed" or "indoor status".
     * **Solution:** I implemented a parsing algorithm that reads a type identifier at the beginning of each line. Using conditional logic, the system invokes the appropriate constructor to recreate the object, ensuring that polymorphism remains functional throughout the session.
 
-* **Data Persistence & Integrity:**
-    * **Problem:** Risk of data loss if the program is closed unexpectedly (e.g., manually stopping the process in the IDE) before the `ArrayList` is saved.
-    * **Solution:** I established a strict "save-on-exit" protocol. The `saveToFile()` method is integrated directly into the main control loop's exit sequence. This ensures that the current state of the database is always synchronized with the local storage before the application terminates.
-
 * **Input Buffer and Scanner Management:**
     * **Problem:** One of the most common issues in Java CLI applications is the "buffer skip" effect when switching between `nextInt()` and `nextLine()`, which often leads to the program skipping user input prompts.
     * **Solution:** To resolve this, I developed a unified `getValidInt()` method. Instead of using `nextInt()`, it reads the entire line as a String and parses it into an Integer. This approach clears the scanner buffer completely and prevents input misalignment.
 
+* **Data Persistence & Integrity:**
+    * **Problem:** Risk of data loss if the program is closed unexpectedly (e.g., manually stopping the process in the IDE) before the `ArrayList` is saved.
+    * **Solution:** I established a strict "save-on-exit" protocol. The `saveToFile()` method is integrated directly into the main control loop's exit sequence. This ensures that the current state of the database is always synchronized with the local storage before the application terminates.
+
 * **Robust Input Validation:**
     * **Problem:** The application was initially prone to crashing if a user entered non-numeric characters (like letters) when an ID or age was required.
     * **Solution:** I implemented an error-handling mechanism using `try-catch` blocks within an infinite loop. The system now gracefully catches `NumberFormatException`, providing a user-friendly error message and reprompting the user instead of terminating the program.
+
+### Phase 2: GUI Implementation & UX
+* **GUI Data Integrity and Security:**
+    * **Problem:** In "Guest Mode," buttons were disabled, but the JTable remained editable by default, allowing unauthorized data modification.
+    * **Solution:** I overrode the isCellEditable method in DefaultTableModel to enforce strict read-only protection across the entire dashboard.
+
+* **Visual Consistency:**
+    * **Problem:** Standard Swing components often ignored custom background colors or rendered inconsistently across different operating systems.
+    * **Solution:** I switched to a Cross-Platform Look-and-Feel and used forced painting methods (setOpaque, setContentAreaFilled) to ensure a professional, uniform UI.
+
+### Phase 3: Database Integration (SQL)
+* **Persistent Storage Synchronization:**
+    * **Problem:** Moving from text files to SQLite meant handling technical data types, where boolean values were stored as integers (0 or 1), making the UI unreadable.
+    * **Solution:** I implemented a translation layer that interprets database integers into user-friendly strings like "Indoors" or "Outdoors" during the data-fetching cycle.
+
+* **Library Management:**
+    * **Problem:** Integrating the SQLite JDBC driver triggered various environment warnings and SLF4J logging errors in the terminal.
+    * **Solution:** I performed a technical audit of the warnings and configured the project libraries to ensure stable CRUD operations despite the environment's notification noise.
+

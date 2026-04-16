@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static String currentRole = "User"; // Переменная для хранения текущей роли
+    private static String currentRole = "User";
 
     private static boolean login() {
         System.out.println("--- Welcome to Pet Adoption System ---");
@@ -14,7 +14,7 @@ public class Main {
         int choice = getValidInt();
 
         if (choice == 1) {
-            // Пароль запрашивается ТОЛЬКО если выбрана роль админа
+
             System.out.print("Enter Admin Password: ");
             String pass = scanner.nextLine();
 
@@ -37,7 +37,7 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        if (!login()) return; // Останавливаем программу, если админ не ввел пароль
+        if (!login()) return;
 
         loadFromFile();
         boolean running = true;

@@ -14,26 +14,26 @@ public class PetGui {
     private String currentRole = "User";
 
     public PetGui() {
-        // 1. Сначала окно входа
+
         if (!showLoginDialog()) {
             System.exit(0);
         }
 
-        // 2. Создание основного окна
+
         frame = new JFrame("Pet Adoption System - Professional Edition");
         frame.setSize(850, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         frame.getContentPane().setBackground(new Color(245, 245, 245));
 
-        // --- ЗАГОЛОВОК ---
+
         headerLabel = new JLabel("Shelter Management Dashboard", SwingConstants.CENTER);
         headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
         headerLabel.setForeground(new Color(44, 62, 80));
         headerLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         frame.add(headerLabel, BorderLayout.NORTH);
 
-        // --- ТАБЛИЦА ---
+
         String[] columns = {"ID", "Pet Type", "Name", "Age", "Special Info"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
@@ -44,7 +44,7 @@ public class PetGui {
         table = new JTable(tableModel);
 
         for (Object[] row : DatabaseManager.loadAllPets()) {
-            // Проверяем: если это кот, то форматируем Special Info (row[4])
+
             if ("Cat".equalsIgnoreCase(row[1].toString())) {
                 String info = row[4].toString();
                 if (info.equals("1") || info.equalsIgnoreCase("true")) {
@@ -55,14 +55,14 @@ public class PetGui {
             }
             tableModel.addRow(row);
         }
-        // Стилизация строк и текста
+
         table.setRowHeight(35);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setSelectionBackground(new Color(232, 240, 254));
         table.setShowGrid(true);
         table.setGridColor(new Color(220, 220, 220));
 
-        // СТИЛИЗАЦИЯ ШАПКИ (Чтобы не была белой)
+
         JTableHeader header = table.getTableHeader();
         header.setPreferredSize(new Dimension(100, 40));
         header.setFont(new Font("Segoe UI", Font.BOLD, 15));
@@ -74,7 +74,7 @@ public class PetGui {
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
         frame.add(scrollPane, BorderLayout.CENTER);
 
-        // --- ПАНЕЛЬ КНОПОК ---
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 25));
         buttonPanel.setBackground(new Color(245, 245, 245));
 
@@ -87,7 +87,7 @@ public class PetGui {
         buttonPanel.add(btnDelete);
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
-        // --- ПРОВЕРКА РОЛИ ---
+
         if (!currentRole.equals("Admin")) {
             btnAddDog.setEnabled(false);
             btnAddCat.setEnabled(false);
@@ -96,15 +96,15 @@ public class PetGui {
             headerLabel.setForeground(Color.GRAY);
         }
 
-        // --- ЛОГИКА КНОПОК ---
+
         btnAddDog.addActionListener(e -> addPetAction("Dog", "Breed"));
         btnAddCat.addActionListener(e -> addPetAction("Cat", "Indoor (true/false)"));
         btnDelete.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row != -1) {
-                int id = (int) tableModel.getValueAt(row, 0); // Получаем ID из первой колонки
-                DatabaseManager.deletePet(id);               // Удаляем из базы
-                tableModel.removeRow(row);                    // Удаляем из таблицы
+                int id = (int) tableModel.getValueAt(row, 0);
+                DatabaseManager.deletePet(id);
+                tableModel.removeRow(row);
             }
         });
 
@@ -112,7 +112,7 @@ public class PetGui {
         frame.setVisible(true);
     }
 
-    // МЕТОД ДЛЯ КРАСИВЫХ КНОПОК
+
     private JButton createStyledButton(String text, Color color) {
         JButton btn = new JButton(text);
         btn.setPreferredSize(new Dimension(180, 45));
@@ -120,13 +120,13 @@ public class PetGui {
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
 
-        // Жесткая установка цвета
+
         btn.setBackground(color);
         btn.setForeground(Color.WHITE);
         btn.setOpaque(true);
         btn.setContentAreaFilled(true);
 
-        // Эффект при наведении
+
         btn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -140,7 +140,7 @@ public class PetGui {
         return btn;
     }
 
-    // МЕТОД ДЛЯ ВХОДА
+
     private boolean showLoginDialog() {
         String[] options = {"Admin Login", "Guest View"};
         int res = JOptionPane.showOptionDialog(null, "Choose access level:", "Security Check",
@@ -173,10 +173,10 @@ public class PetGui {
         String age = JOptionPane.showInputDialog(frame, "Enter " + type + " Age:");
         String info = JOptionPane.showInputDialog(frame, "Enter " + extra + ":");
 
-        // Сохраняем в базу оригинал (0/1 или true/false)
+
         DatabaseManager.savePet(type, name, age, info);
 
-        // Подготавливаем текст для отображения в таблице
+
         Object displayInfo = info;
         if (type.equalsIgnoreCase("Cat")) {
             if (info.equals("1") || info.equalsIgnoreCase("true")) {
@@ -190,7 +190,7 @@ public class PetGui {
     }
 
     public static void main(String[] args) {
-        DatabaseManager.initialize(); // Создаем базу перед запуском окна
+        DatabaseManager.initialize();
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {}
